@@ -13,10 +13,10 @@ import TaskListChange from './changes/tasklist_change'
 import ProjectChange from './changes/project_change'
 import UserChange from './changes/user_change'
 
-const debug = require('debug')('tasks'),
-  errors = require('restify-error'),
-  restify = require('restify'),
-  restifyValidation = require('node-restify-validation')
+const debug = require('debug')('tasks')
+const errors = require('restify-error')
+const restify = require('restify')
+const restifyValidation = require('node-restify-validation')
 
 const server = restify.createServer({name: 'tasks'})
 
@@ -111,7 +111,7 @@ server.patch({url: '/users/:userId',
       last_name: { isRequired: false, regex: /^.{1,255}$/ }
     }
   }}, jwtAuth, function (req, res, next) {
-    if (req.params.authUserId != req.params.userId) {
+    if (req.params.authUserId !== req.params.userId) {
       res.send(new errors.NotAuthorizedError())
       next()
 

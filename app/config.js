@@ -1,14 +1,5 @@
 'use strict'
 
-const bluebird = require('bluebird'),
-  mysql = require('promise-mysql'),
-  redis = require('redis'),
-  bcrypt = require('bcrypt'),
-  jsonwebtoken = require('jsonwebtoken')
-
-bluebird.promisifyAll(redis.RedisClient.prototype)
-bluebird.promisifyAll(redis.Multi.prototype)
-
 import ProjectService from './services/project_service'
 import TaskService from './services/task_service'
 import TaskListService from './services/tasklist_service'
@@ -25,6 +16,16 @@ import TaskListRedisRepository from './repositories/redis/tasklist_repository'
 import TaskRedisRepository from './repositories/redis/task_repository'
 import SearchRedisRepository from './repositories/redis/search_repository'
 
+const bluebird = require('bluebird')
+const mysql = require('promise-mysql')
+const redis = require('redis')
+const bcrypt = require('bcrypt')
+const jsonwebtoken = require('jsonwebtoken')
+const debug = require('debug')('tasks')
+
+bluebird.promisifyAll(redis.RedisClient.prototype)
+bluebird.promisifyAll(redis.Multi.prototype)
+
 let mysqlPool = mysql.createPool({
   host: process.env.DB_HOST || '127.0.0.1',
   user: process.env.DB_USER || 'root',
@@ -38,7 +39,7 @@ let redisClient = redis.createClient(
     { enable_offline_queue: false }
 )
 
-redisClient.on('error', function (err) {})
+redisClient.on('error', function (err) { debug('redis err: %s', err) })
 
 let projectRedisRepository = new ProjectRedisRepository(redisClient)
 let taskListRedisRepository = new TaskListRedisRepository(redisClient)
