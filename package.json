@@ -1,0 +1,49 @@
+{
+  "name": "tasks",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "babel . --ignore node_modules,build,coverage -d build --source-maps",
+    "start": "DB_HOST=127.0.0.1 DB_USER=root DB_PASS=root DB_NAME=tasks REDIS_PORT=6379 REDIS_HOST=127.0.0.1 REST_HOST=127.0.0.1 REST_PORT=8181 DEBUG=tasks babel-node app/index.js",
+    "test": "DB_HOST=127.0.0.1 DB_USER=root DB_PASS=root DB_NAME=tasks_test REDIS_PORT=6379 REDIS_HOST=127.0.0.1 babel-tape-runner 'tests/*/*.test.js' | tap-spec",
+    "coverage": "npm run-script build && istanbul cover tape build/tests/*/*.test.js && remap-istanbul -i coverage/coverage.json  -o coverage/report -t html"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ],
+    "plugins": [
+      [
+        "transform-runtime",
+        {
+          "regenerator": true
+        }
+      ]
+    ]
+  },
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "bluebird": "^3.5.0",
+    "debug": "^3.0.0",
+    "jsonwebtoken": "^7.4.3",
+    "node-restify-validation": "^1.1.1",
+    "promise-mysql": "^3.0.2",
+    "redis": "^2.8.0",
+    "restify": "^5.2.0",
+    "restify-error": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^7.2.3",
+    "babel-istanbul": "^0.12.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-runtime": "^6.26.0",
+    "babel-tape-runner": "^2.0.1",
+    "istanbul": "^0.4.5",
+    "remap-istanbul": "^0.9.5",
+    "sinon": "^3.2.1",
+    "standard": "^10.0.3",
+    "tap-spec": "^4.1.1",
+    "tape-async": "^2.3.0"
+  }
+}
